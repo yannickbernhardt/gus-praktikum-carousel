@@ -9,31 +9,39 @@ Die Kommentarspalte ist **gemeinsam** – was eine Person schreibt, sehen alle a
 
 ```
 public/index.html   Carousel + Kommentarspalte (alles in einer Datei)
-server.js           Mini-Server, nur Node-Standardbibliothek, keine Abhängigkeiten
-package.json        start-Skript für Railway
+main.ts             Server für Deno Deploy, Kommentare in Deno KV
+deno.json           Tasks und unstable-Flag für KV
 ```
 
 ## Lokal starten
 
 ```bash
-node server.js
+deno task start
 ```
 
-Läuft dann auf http://localhost:3000
+Läuft dann auf http://localhost:8000
 
-Mit Moderation und Speicherung auf der Platte:
+Mit Moderation und eigenem Port:
 
 ```bash
-PORT=3000 LEHRER_TOKEN=geheim DATA_DIR=daten node server.js
+PORT=8731 LEHRER_TOKEN=geheim deno task start
 ```
+
+Der lokale KV-Speicher liegt in Denos Cache-Verzeichnis und bleibt zwischen
+Neustarts erhalten. Zum Leeren den Lehrer-Link benutzen.
 
 ## Umgebungsvariablen
 
 | Variable       | Wirkung |
 |----------------|---------|
-| `PORT`         | Port; setzt Railway automatisch. |
 | `LEHRER_TOKEN` | Schaltet die Lehrer-Ansicht frei. Ohne die Variable gibt es keine Moderation. |
-| `DATA_DIR`     | Ordner für `kommentare.json`. Ohne die Variable liegen die Kommentare nur im Arbeitsspeicher und sind nach einem Neustart weg. |
+| `PORT`         | Nur lokal nötig; auf Deno Deploy wird der Port vorgegeben. |
+
+Auf Deno Deploy wird die Variable so gesetzt:
+
+```bash
+deno deploy env add LEHRER_TOKEN <wert> --secret
+```
 
 ## Zwei Links
 
@@ -59,7 +67,7 @@ Der Lehrer-Link gehört nicht auf den Beamer und nicht in den QR-Code.
 Die Kommentare liegen auf einem Server in der Cloud und sind über den Link für
 jede\*n erreichbar, der ihn kennt. Deshalb:
 
-- Namensfeld freiwillig – „anonym" ist voreingestellt, wenn nichts eingetragen wird.
+- Namensfeld freiwillig – „anonym" wird eingetragen, wenn nichts dasteht.
 - Der Hinweis unter dem Eingabefeld erinnert an die Schweigepflicht:
   keine echten Namen von Bewohner\*innen, Klient\*innen oder Kindern.
 - Nach der Stunde die Spalte über den Lehrer-Link leeren.
