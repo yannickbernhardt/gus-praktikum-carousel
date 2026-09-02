@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>fos.gus.praktikum · Vier Praktika. Eine Woche.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #fafafa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #262626;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .app { width: 100%; max-width: 470px; background: #fff; min-height: 100vh; min-height: 100dvh; }
+
+  /* ---------- Instagram-Header ---------- */
+  .ig-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 14px; position: sticky; top: 0; background: #fff; z-index: 20;
+  }
+  .ig-user { display: flex; align-items: center; gap: 11px; }
+  .ig-ring {
+    width: 40px; height: 40px; border-radius: 50%; padding: 2px;
+    background: linear-gradient(45deg, #f9ce34, #ee2a7b 45%, #6228d7);
+    display: flex; align-items: center; justify-content: center; flex: none;
+  }
+  .ig-avatar {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: #b45309; color: #fafaf8;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 17px;
+    border: 2px solid #fff;
+  }
+  .ig-meta { display: flex; flex-direction: column; line-height: 1.2; }
+  .ig-name-row { display: flex; align-items: center; gap: 4px; }
+  .ig-username { font-weight: 600; font-size: 14px; color: #262626; }
+  .ig-sub { font-size: 12px; color: #737373; margin-top: 1px; }
+  .ig-more { padding: 6px; color: #262626; display: flex; }
+
+  /* ---------- Media / Carousel ---------- */
+  .media {
+    position: relative; width: 100%; aspect-ratio: 1080 / 1350;
+    overflow: hidden; background: #fafaf8; touch-action: pan-y; user-select: none;
+  }
+  .track { display: flex; height: 100%; width: 100%; transition: transform .32s cubic-bezier(.25,.1,.25,1); will-change: transform; }
+  .cell { flex: none; width: 100%; height: 100%; overflow: hidden; position: relative; }
+  .cell > section { transform-origin: top left; }
+
+  .counter {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(35,32,28,0.55); color: #fff;
+    font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+    z-index: 6; letter-spacing: 0.02em; pointer-events: none; backdrop-filter: blur(2px);
+  }
+
+  .dbl-heart {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%) scale(0); z-index: 8; pointer-events: none;
+    color: rgba(255,255,255,0.92); filter: drop-shadow(0 2px 8px rgba(0,0,0,0.35));
+  }
+  .dbl-heart.pop { animation: heartPop .9s ease forwards; }
+  @keyframes heartPop {
+    0%   { transform: translate(-50%,-50%) scale(0);   opacity: 0; }
+    15%  { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+    45%  { transform: translate(-50%,-50%) scale(1);    opacity: 1; }
+    80%  { transform: translate(-50%,-50%) scale(1);    opacity: 1; }
+    100% { transform: translate(-50%,-50%) scale(1.1);  opacity: 0; }
+  }
+
+  /* ---------- Dots / Aktionen ---------- */
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 11px 0 3px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #d6d1c9; transition: background .25s, transform .25s; }
+  .dot.active { background: #b45309; transform: scale(1.15); }
+
+  .actions { display: flex; align-items: center; padding: 5px 12px 2px; }
+  .actions .left { display: flex; align-items: center; gap: 15px; }
+  .actions .spacer { flex: 1; }
+  .icon-btn { background: none; border: none; padding: 0; margin: 0; color: #262626; display: flex; cursor: pointer; }
+  .icon-btn:active { opacity: .5; }
+  .heart-btn.liked svg { fill: #ed4956; stroke: #ed4956; }
+  .heart-btn.liked { animation: likeBounce .35s ease; }
+  @keyframes likeBounce { 0%,100% { transform: scale(1); } 40% { transform: scale(1.25); } }
+
+  .likes { padding: 4px 14px 0; font-weight: 600; font-size: 14px; }
+  .caption { padding: 5px 14px 0; font-size: 14px; line-height: 1.4; color: #262626; }
+  .caption .cap-user { font-weight: 600; margin-right: 5px; }
+  .caption .tags { color: #b45309; }
+  .comments-link { padding: 6px 14px 0; font-size: 14px; color: #737373; cursor: pointer; }
+  .time { padding: 6px 14px 20px; font-size: 10px; letter-spacing: .03em; color: #8e8e8e; text-transform: uppercase; }
+  .hint { text-align: center; font-size: 12px; color: #b0b0b0; padding: 4px 0 26px; }
+
+  /* ---------- Kommentarspalte ---------- */
+  .comments-link { user-select: none; }
+  .csheet { border-top: 1px solid #efece7; margin-top: 10px; padding-top: 4px; }
+  .csheet[hidden] { display: none; }
+  .csheet-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px 6px; font-size: 14px; font-weight: 600; color: #262626;
+  }
+  .cclose {
+    background: none; border: none; font-size: 22px; line-height: 1;
+    color: #9c948a; cursor: pointer; padding: 0 2px;
+  }
+  .clist { padding: 2px 14px 4px; }
+  .citem { display: flex; align-items: flex-start; gap: 11px; padding: 9px 0; }
+  .cavatar {
+    flex: none; width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Source Serif 4', serif; font-size: 14px; font-weight: 600;
+    color: #fafaf8; background: #857d73; text-transform: lowercase;
+  }
+  .cavatar-me { background: #b45309; }
+  .cbody { flex: 1; min-width: 0; }
+  .cline { font-size: 14px; line-height: 1.42; color: #262626; overflow-wrap: anywhere; }
+  .cuser { font-weight: 600; margin-right: 5px; }
+  .cmeta { display: flex; gap: 14px; margin-top: 4px; font-size: 12px; color: #9c948a; }
+  .cmeta button { background: none; border: none; padding: 0; font: inherit; color: #9c948a; cursor: pointer; }
+  .cmeta button:hover { color: #b45309; }
+  .cheart {
+    flex: none; background: none; border: none; padding: 4px 0 0; cursor: pointer;
+    color: #c9c2b8; display: flex;
+  }
+  .cheart.on { color: #ed4956; }
+  .cheart.on svg { fill: #ed4956; stroke: #ed4956; }
+
+  .cbar { padding: 8px 14px 4px; border-top: 1px solid #f4f1ec; margin-top: 4px; }
+  .cbar-row { display: flex; align-items: center; gap: 11px; }
+  .cbar-row + .cbar-row { margin-top: 9px; }
+  .cname, .cinput {
+    flex: 1; min-width: 0; border: none; outline: none; background: none;
+    font-family: inherit; color: #262626;
+  }
+  .cname { font-size: 13px; color: #857d73; }
+  .cinput { font-size: 14px; padding: 4px 0; }
+  .cname::placeholder, .cinput::placeholder { color: #b8b1a7; }
+  .cpost {
+    flex: none; background: none; border: none; padding: 4px 2px;
+    font-family: inherit; font-size: 14px; font-weight: 600; color: #b45309; cursor: pointer;
+  }
+  .cpost:disabled { color: #ddd8d0; cursor: default; }
+  .cnote { padding: 6px 14px 2px; font-size: 11px; line-height: 1.45; color: #b0a89d; }
+  .cstate { padding: 14px 14px 10px; font-size: 13px; color: #9c948a; }
+  .cstate[hidden] { display: none; }
+  .cerror { color: #b45309; }
+  .cadmin {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 8px 14px 2px; padding: 8px 10px;
+    background: #fbf6ef; border: 1px solid #f0e3d2; border-radius: 8px;
+    font-size: 12px; color: #8a7a5e;
+  }
+  .cadmin[hidden] { display: none; }
+  .cadmin button {
+    background: none; border: none; font: inherit; font-weight: 600;
+    color: #b45309; cursor: pointer; padding: 0;
+  }
+
+  /* ---------- Slide-Layout (1080 x 1350) ---------- */
+  .s {
+    position: relative; width: 1080px; height: 1350px; overflow: hidden;
+    box-sizing: border-box; padding: 96px 100px 88px;
+    display: flex; flex-direction: column;
+    background: #fafaf8; color: #23201c;
+    font-family: 'Inter', sans-serif;
+  }
+  .s-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .s-handle { font-size: 24px; font-weight: 500; letter-spacing: 0.02em; color: #9c948a; }
+  .s-num { font-size: 23px; font-weight: 600; letter-spacing: 0.16em; color: #9c948a; }
+  .s-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .s-foot { display: flex; justify-content: flex-end; align-items: center; gap: 13px; font-size: 22px; font-weight: 500; letter-spacing: 0.04em; color: #b0a89d; }
+
+  .s-name { font-size: 25px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #b45309; }
+  .s-place { font-size: 29px; font-weight: 400; color: #857d73; margin-top: 12px; }
+  .s-rule { width: 72px; height: 2px; background: #b45309; margin: 40px 0 44px; }
+
+  .s-quote {
+    font-family: 'Source Serif 4', serif; font-weight: 400;
+    font-size: 55px; line-height: 1.36; letter-spacing: -0.005em;
+    margin: 0; max-width: 880px; color: #23201c; text-wrap: pretty;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="ig-header">
+    <div class="ig-user">
+      <div class="ig-ring"><div class="ig-avatar">f</div></div>
+      <div class="ig-meta">
+        <div class="ig-name-row"><span class="ig-username">fos.gus.praktikum</span></div>
+        <div class="ig-sub">FOS · Gesundheit und Soziales</div>
+      </div>
+    </div>
+    <div class="ig-more">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+    </div>
+  </div>
+
+  <!-- Media / Carousel -->
+  <div class="media" id="media">
+    <div class="counter" id="counter">1/6</div>
+    <svg class="dbl-heart" id="dblHeart" width="90" height="90" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.9-10-9.4C.3 8 1.8 4.5 5 4.1c2-.3 3.6.8 4.5 2.1C10.4 4.9 12 3.8 14 4.1c3.2.4 4.7 3.9 3 7.5C19.5 16.1 12 21 12 21z"/></svg>
+    <div class="track" id="track">
+
+      <!-- SLIDE 1 · COVER -->
+      <div class="cell">
+        <section class="s">
+          <div class="s-head">
+            <span class="s-handle">@fos.gus.praktikum</span>
+            <span class="s-num">1 / 6</span>
+          </div>
+          <div class="s-body">
+            <div class="s-rule" style="margin:0 0 52px;"></div>
+            <h1 style="font-family:'Source Serif 4',serif; font-weight:400; font-size:74px; line-height:1.14; letter-spacing:-0.015em; margin:0; max-width:860px; text-wrap:balance;">Vier Praktika.<br>Eine Woche.<br>Vier verschiedene Welten.</h1>
+            <p style="font-size:29px; font-weight:400; letter-spacing:0.02em; line-height:1.5; margin:56px 0 0; color:#857d73;">Berufsfeld Gesundheit und Soziales</p>
+          </div>
+          <div class="s-foot"><span>weiterswipen</span><span style="font-size:28px; line-height:1;">&#8594;</span></div>
+        </section>
+      </div>
+
+      <!-- SLIDE 2 · LEA -->
+      <div class="cell">
+        <section class="s">
+          <div class="s-head">
+            <span class="s-handle">@fos.gus.praktikum</span>
+            <span class="s-num">2 / 6</span>
+          </div>
+          <div class="s-body">
+            <div class="s-name">Lea</div>
+            <div class="s-place">Kita &bdquo;Pusteblume&ldquo;, Ibbenb&uuml;ren</div>
+            <div class="s-rule"></div>
+            <blockquote class="s-quote">&bdquo;Sieben Kinder unter drei Jahren. Morgenkreis, Freispiel, Mittagessen &ndash; jeden Tag gleich. Ich habe gewickelt und getr&ouml;stet. Meine Anleiterin nennt das Beziehungsarbeit. Ich hatte das Gef&uuml;hl, nur mitzulaufen.&ldquo;</blockquote>
+          </div>
+          <div class="s-foot"><span>weiterswipen</span><span style="font-size:28px; line-height:1;">&#8594;</span></div>
+        </section>
+      </div>
+
+      <!-- SLIDE 3 · YUSUF -->
+      <div class="cell">
+        <section class="s">
+          <div class="s-head">
+            <span class="s-handle">@fos.gus.praktikum</span>
+            <span class="s-num">3 / 6</span>
+          </div>
+          <div class="s-body">
+            <div class="s-name">Yusuf</div>
+            <div class="s-place">Wohngruppe &bdquo;Regenbogen&ldquo;, Westerkappeln</div>
+            <div class="s-rule"></div>
+            <blockquote class="s-quote">&bdquo;Bei uns gibt es keinen Morgenkreis, bei uns gibt es Schicht&uuml;bergabe. Neun Jugendliche zwischen 12 und 17. Am Mittwoch ist Johann wegen einer Tasse ausgerastet. Ich verstehe bis heute nicht, warum er so h&auml;ufig in Streit ger&auml;t.&ldquo;</blockquote>
+          </div>
+          <div class="s-foot"><span>weiterswipen</span><span style="font-size:28px; line-height:1;">&#8594;</span></div>
+        </section>
+      </div>
+
+      <!-- SLIDE 4 · AYLIN -->
+      <div class="cell">
+        <section class="s">
+          <div class="s-head">
+            <span class="s-handle">@fos.gus.praktikum</span>
+            <span class="s-num">4 / 6</span>
+          </div>
+          <div class="s-body">
+            <div class="s-name">Aylin</div>
+            <div class="s-place">Seniorenzentrum St. Elisabeth, Ibbenb&uuml;ren</div>
+            <div class="s-rule"></div>
+            <blockquote class="s-quote">&bdquo;Streit habe ich hier keinen &ndash; ich habe eine Klingel. Frau M. klingelt achtmal in einer Stunde und will dann gar nichts. Nicht pers&ouml;nlich nehmen, sagt die Pflegefachkraft. Nebenher l&auml;uft st&auml;ndig die Dokumentation.&ldquo;</blockquote>
+          </div>
+          <div class="s-foot"><span>weiterswipen</span><span style="font-size:28px; line-height:1;">&#8594;</span></div>
+        </section>
+      </div>
+
+      <!-- SLIDE 5 · JANNIK -->
+      <div class="cell">
+        <section class="s">
+          <div class="s-head">
+            <span class="s-handle">@fos.gus.praktikum</span>
+            <span class="s-num">5 / 6</span>
+          </div>
+          <div class="s-body">
+            <div class="s-name">Jannik</div>
+            <div class="s-place">Werkstatt der Lebenshilfe, Lengerich</div>
+            <div class="s-rule"></div>
+            <blockquote class="s-quote">&bdquo;Ich bin in der Montagegruppe. Mein Anleiter ist Schreinermeister mit sonderp&auml;dagogischer Zusatzausbildung. Echte Auftr&auml;ge von Firmen. Was mich wundert: Es gibt sehr viele Pausen.&ldquo;</blockquote>
+          </div>
+          <div class="s-foot"><span>weiterswipen</span><span style="font-size:28px; line-height:1;">&#8594;</span></div>
+        </section>
+      </div>
+
+      <!-- SLIDE 6 · FRAGE -->
+      <div class="cell">
+        <section class="s">
+          <div class="s-head">
+            <span class="s-handle">@fos.gus.praktikum</span>
+            <span class="s-num">6 / 6</span>
+          </div>
+          <div class="s-body">
+            <h2 style="font-family:'Source Serif 4',serif; font-weight:400; font-size:82px; line-height:1.14; letter-spacing:-0.015em; margin:0; max-width:860px; color:#23201c; text-wrap:balance;">Und das soll alles dasselbe Berufsfeld sein?</h2>
+            <div class="s-rule" style="margin:60px 0 34px;"></div>
+            <p style="font-size:28px; font-weight:400; letter-spacing:0.02em; margin:0; color:#857d73;">Lea, Freitagabend.</p>
+          </div>
+          <div class="s-foot"></div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="actions">
+    <div class="left">
+      <button class="icon-btn heart-btn" id="heartBtn" aria-label="Gef&auml;llt mir">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+      </button>
+      <button class="icon-btn" id="cmtBtn" aria-label="Kommentieren">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.5-.7L3 21l1.4-4.5A8.4 8.4 0 0 1 3.6 11.5 8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Teilen">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="spacer"></div>
+    <button class="icon-btn" id="saveBtn" aria-label="Speichern">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </button>
+  </div>
+
+  <div class="likes" id="likes">Gef&auml;llt 184 Mal</div>
+
+  <div class="caption">
+    <span class="cap-user">fos.gus.praktikum</span><span>Eine Woche Praktikum, vier Einrichtungen. Lea, Yusuf, Aylin und Jannik erz&auml;hlen, wie ihr Tag aussah. Swipe durch alle 6 Slides &#8594;</span> <span class="tags">#praktikumswoche #gesundheitundsoziales #fos</span>
+  </div>
+
+  <div class="comments-link" id="commentsLink">Kommentare ansehen</div>
+  <div class="time">Vor 3 Stunden</div>
+
+  <div class="csheet" id="csheet" hidden>
+    <div class="csheet-head">
+      <span>Kommentare</span>
+      <button class="cclose" id="cclose" aria-label="Kommentare schließen">&times;</button>
+    </div>
+    <div class="cstate" id="cstate">Kommentare werden geladen …</div>
+    <div class="clist" id="clist"></div>
+    <div class="cbar">
+      <div class="cbar-row">
+        <div class="cavatar cavatar-me" id="cme">du</div>
+        <input class="cname" id="cname" type="text" maxlength="24" placeholder="dein Name" autocomplete="off">
+      </div>
+      <div class="cbar-row">
+        <input class="cinput" id="cinput" type="text" maxlength="280" placeholder="Wie war deine Praktikumswoche?" autocomplete="off">
+        <button class="cpost" id="cpost" disabled>Posten</button>
+      </div>
+    </div>
+    <div class="cnote">Alle in der Klasse sehen deinen Kommentar. Keine echten Namen aus deiner Einrichtung &ndash; Schweigepflicht.</div>
+    <div class="cadmin" id="cadmin" hidden>
+      <span>Lehrer-Ansicht</span>
+      <button type="button" id="creset">Alle Kommentare löschen</button>
+    </div>
+  </div>
+
+  <div class="hint">&#8592; wischen oder tippen zum Bl&auml;ttern &#8594;</div>
+
+</div>
+
+<script>
+(function () {
+  var track   = document.getElementById('track');
+  var media   = document.getElementById('media');
+  var counter = document.getElementById('counter');
+  var dotsBox = document.getElementById('dots');
+  var cells   = Array.prototype.slice.call(track.children);
+  var total   = cells.length;
+  var index   = 0;
+
+  for (var i = 0; i < total; i++) {
+    var d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    (function (n) { d.addEventListener('click', function () { go(n); }); })(i);
+    dotsBox.appendChild(d);
+  }
+  var dots = Array.prototype.slice.call(dotsBox.children);
+
+  // 1080px-Slides in die Handybreite skalieren
+  function scaleSlides() {
+    var s = media.clientWidth / 1080;
+    for (var i = 0; i < cells.length; i++) {
+      var sec = cells[i].querySelector('section');
+      if (sec) sec.style.transform = 'scale(' + s + ')';
+    }
+  }
+
+  function render() {
+    track.style.transform = 'translateX(' + (-index * 100) + '%)';
+    counter.textContent = (index + 1) + '/' + total;
+    for (var i = 0; i < dots.length; i++) dots[i].className = 'dot' + (i === index ? ' active' : '');
+  }
+
+  function go(n) { index = Math.max(0, Math.min(total - 1, n)); render(); }
+  function next() { if (index < total - 1) go(index + 1); }
+  function prev() { if (index > 0) go(index - 1); }
+
+  var startX = 0, startY = 0, dragging = false, locked = false;
+  media.addEventListener('touchstart', function (e) {
+    startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    dragging = true; locked = false; track.style.transition = 'none';
+  }, { passive: true });
+
+  media.addEventListener('touchmove', function (e) {
+    if (!dragging) return;
+    var dx = e.touches[0].clientX - startX;
+    var dy = e.touches[0].clientY - startY;
+    if (!locked) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      locked = true;
+      if (Math.abs(dy) > Math.abs(dx)) { dragging = false; track.style.transition = ''; render(); return; }
+    }
+    track.style.transform = 'translateX(' + (-index * media.clientWidth + dx * 0.9) + 'px)';
+  }, { passive: true });
+
+  media.addEventListener('touchend', function (e) {
+    if (!dragging) return;
+    dragging = false; track.style.transition = '';
+    var dx = e.changedTouches[0].clientX - startX;
+    var threshold = media.clientWidth * 0.18;
+    if (dx <= -threshold) next(); else if (dx >= threshold) prev(); else render();
+  });
+
+  media.addEventListener('click', function (e) {
+    var rect = media.getBoundingClientRect();
+    if (e.clientX - rect.left > rect.width / 2) next(); else prev();
+  });
+
+  var lastTap = 0, dblHeart = document.getElementById('dblHeart');
+  media.addEventListener('touchend', function () {
+    var now = Date.now();
+    if (now - lastTap < 300) {
+      dblHeart.classList.remove('pop'); void dblHeart.offsetWidth; dblHeart.classList.add('pop');
+      setLiked(true);
+    }
+    lastTap = now;
+  });
+
+  var heartBtn = document.getElementById('heartBtn');
+  var saveBtn  = document.getElementById('saveBtn');
+  var likesEl  = document.getElementById('likes');
+  var liked = false;
+  function setLiked(v) {
+    liked = v;
+    heartBtn.classList.toggle('liked', liked);
+    var svg = heartBtn.querySelector('svg');
+    if (liked) { svg.setAttribute('fill', '#ed4956'); svg.setAttribute('stroke', '#ed4956'); }
+    else { svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor'); }
+    likesEl.textContent = 'Gefällt ' + (liked ? '185' : '184') + ' Mal';
+  }
+  heartBtn.addEventListener('click', function (e) { e.stopPropagation(); setLiked(!liked); });
+  saveBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var svg = saveBtn.querySelector('svg');
+    svg.setAttribute('fill', svg.getAttribute('fill') === 'currentColor' ? 'none' : 'currentColor');
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  window.addEventListener('resize', scaleSlides);
+  window.addEventListener('orientationchange', function () { setTimeout(scaleSlides, 120); });
+  document.fonts && document.fonts.ready.then(scaleSlides);
+
+  scaleSlides();
+  render();
+})();
+</script>
+
+<script>
+/* ---------- Gemeinsame Kommentarspalte ---------- */
+(function () {
+  var NAME_KEY = 'gus-praktikum:name';
+  var ID_KEY   = 'gus-praktikum:client';
+  var POLL_MS  = 4000;
+
+  var sheet  = document.getElementById('csheet');
+  var link   = document.getElementById('commentsLink');
+  var closeB = document.getElementById('cclose');
+  var cmtBtn = document.getElementById('cmtBtn');
+  var list   = document.getElementById('clist');
+  var state  = document.getElementById('cstate');
+  var input  = document.getElementById('cinput');
+  var nameEl = document.getElementById('cname');
+  var postB  = document.getElementById('cpost');
+  var meAv   = document.getElementById('cme');
+  var admin  = document.getElementById('cadmin');
+  var resetB = document.getElementById('creset');
+
+  var HEART = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+
+  var lehrerToken = new URLSearchParams(location.search).get('lehrer') || '';
+  var istLehrer = false;
+  var comments = [];
+  var likes = {};          // nur lokal, pro Gerät
+  var timer = null;
+
+  /* ---------- kleiner Speicher, der auch ohne localStorage funktioniert ---------- */
+  function get(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  var clientId = get(ID_KEY);
+  if (!clientId) {
+    clientId = 'c' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+    set(ID_KEY, clientId);
+  }
+
+  /* ---------- Helfer ---------- */
+  function q(extra) {
+    var params = [];
+    if (lehrerToken) params.push('lehrer=' + encodeURIComponent(lehrerToken));
+    if (extra) params.push(extra);
+    return params.length ? '?' + params.join('&') : '';
+  }
+
+  function initial(name) {
+    var n = (name || '').replace(/^[^a-zA-ZäöüÄÖÜß0-9]+/, '');
+    return n ? n.charAt(0).toLowerCase() : 'du';
+  }
+
+  function relativeZeit(ts) {
+    var min = Math.floor((Date.now() - ts) / 60000);
+    if (min < 1) return 'jetzt';
+    if (min < 60) return min + ' Min.';
+    var std = Math.floor(min / 60);
+    if (std < 24) return std + ' Std.';
+    return Math.floor(std / 24) + ' Tg.';
+  }
+
+  function zeigeStatus(text, fehler) {
+    state.hidden = !text;
+    state.textContent = text || '';
+    state.className = 'cstate' + (fehler ? ' cerror' : '');
+  }
+
+  /* ---------- Rendern ---------- */
+  function render() {
+    list.innerHTML = '';
+
+    comments.forEach(function (c) {
+      var eigener = !!c.mine;
+
+      var item = document.createElement('div');
+      item.className = 'citem';
+
+      var av = document.createElement('div');
+      av.className = 'cavatar' + (eigener ? ' cavatar-me' : '');
+      av.textContent = initial(c.user);
+
+      var body = document.createElement('div');
+      body.className = 'cbody';
+
+      var line = document.createElement('div');
+      line.className = 'cline';
+      var userSpan = document.createElement('span');
+      userSpan.className = 'cuser';
+      userSpan.textContent = c.user;
+      line.appendChild(userSpan);
+      line.appendChild(document.createTextNode(c.text));
+
+      var meta = document.createElement('div');
+      meta.className = 'cmeta';
+      var zeit = document.createElement('span');
+      zeit.textContent = relativeZeit(c.ts);
+      var zahl = document.createElement('span');
+      zahl.className = 'clikes';
+      zahl.textContent = likes[c.id] ? '1 Gefällt mir' : '';
+      meta.appendChild(zeit);
+      meta.appendChild(zahl);
+
+      if (eigener || istLehrer) {
+        var del = document.createElement('button');
+        del.type = 'button';
+        del.textContent = 'Löschen';
+        del.addEventListener('click', function () { loeschen(c.id); });
+        meta.appendChild(del);
+      }
+
+      body.appendChild(line);
+      body.appendChild(meta);
+
+      var heart = document.createElement('button');
+      heart.className = 'cheart' + (likes[c.id] ? ' on' : '');
+      heart.type = 'button';
+      heart.setAttribute('aria-label', 'Kommentar gefällt mir');
+      heart.innerHTML = HEART;
+      heart.addEventListener('click', function () {
+        likes[c.id] = !likes[c.id];
+        heart.classList.toggle('on', likes[c.id]);
+        zahl.textContent = likes[c.id] ? '1 Gefällt mir' : '';
+      });
+
+      item.appendChild(av);
+      item.appendChild(body);
+      item.appendChild(heart);
+      list.appendChild(item);
+    });
+
+    admin.hidden = !istLehrer;
+
+    link.textContent = sheet.hidden
+      ? (comments.length ? 'Alle ' + comments.length + ' Kommentare ansehen' : 'Kommentar schreiben')
+      : 'Kommentare ausblenden';
+  }
+
+  /* ---------- Server ---------- */
+  function laden(still) {
+    return fetch('/api/comments' + q('clientId=' + encodeURIComponent(clientId)), { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        comments = data.comments || [];
+        istLehrer = !!data.lehrer;
+        zeigeStatus(comments.length ? '' : 'Noch keine Kommentare. Schreib den ersten.');
+        render();
+      })
+      .catch(function () {
+        if (!still) zeigeStatus('Keine Verbindung. Versuch es gleich noch einmal.', true);
+      });
+  }
+
+  function senden() {
+    var text = input.value.trim();
+    if (!text) return;
+    var user = nameEl.value.trim() || 'anonym';
+
+    postB.disabled = true;
+    fetch('/api/comments' + q(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text, user: user, clientId: clientId })
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) { zeigeStatus(res.d.error || 'Das hat nicht geklappt.', true); return; }
+        input.value = '';
+        return laden();
+      })
+      .then(function () {
+        var items = list.querySelectorAll('.citem');
+        if (items.length) items[items.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      })
+      .catch(function () { zeigeStatus('Keine Verbindung. Dein Kommentar wurde nicht gesendet.', true); })
+      .then(function () { postB.disabled = input.value.trim().length === 0; });
+  }
+
+  function loeschen(id) {
+    fetch('/api/comments/' + encodeURIComponent(id) + q('clientId=' + encodeURIComponent(clientId)), { method: 'DELETE' })
+      .then(function (r) { if (!r.ok) throw new Error(); return laden(); })
+      .catch(function () { zeigeStatus('Löschen hat nicht geklappt.', true); });
+  }
+
+  /* ---------- Auf- und Zuklappen ---------- */
+  function starteAbfrage() {
+    stoppeAbfrage();
+    timer = setInterval(function () { laden(true); }, POLL_MS);
+  }
+  function stoppeAbfrage() { if (timer) { clearInterval(timer); timer = null; } }
+
+  function oeffnen() {
+    sheet.hidden = false;
+    render();
+    laden();
+    starteAbfrage();
+    setTimeout(function () {
+      sheet.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      input.focus({ preventScroll: true });
+    }, 60);
+  }
+  function schliessen() { sheet.hidden = true; stoppeAbfrage(); render(); }
+
+  link.addEventListener('click', function () { if (sheet.hidden) oeffnen(); else schliessen(); });
+  cmtBtn.addEventListener('click', function (e) { e.stopPropagation(); if (sheet.hidden) oeffnen(); });
+  closeB.addEventListener('click', schliessen);
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stoppeAbfrage();
+    else if (!sheet.hidden) { laden(true); starteAbfrage(); }
+  });
+
+  /* ---------- Eingabe ---------- */
+  nameEl.value = get(NAME_KEY);
+  meAv.textContent = initial(nameEl.value);
+  nameEl.addEventListener('input', function () {
+    set(NAME_KEY, nameEl.value.trim());
+    meAv.textContent = initial(nameEl.value.trim());
+  });
+
+  input.addEventListener('input', function () { postB.disabled = input.value.trim().length === 0; });
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') senden(); });
+  postB.addEventListener('click', senden);
+
+  resetB.addEventListener('click', function () {
+    if (!confirm('Wirklich alle Kommentare löschen?')) return;
+    fetch('/api/comments' + q(), { method: 'DELETE' })
+      .then(function (r) { if (!r.ok) throw new Error(); return laden(); })
+      .catch(function () { zeigeStatus('Zurücksetzen hat nicht geklappt.', true); });
+  });
+
+  /* Anzahl schon vor dem Öffnen zeigen */
+  laden(true);
+})();
+</script>
+</body>
+</html>
