@@ -24,7 +24,17 @@ type Kommentar = {
   clientId: string;
 };
 
-const kv = await Deno.openKv();
+/* Ohne angehängte KV-Datenbank soll die App trotzdem starten: das Carousel
+   ist dann sichtbar, nur die Kommentarspalte meldet sich als nicht bereit.
+   Ein harter Absturz beim Start würde die ganze Seite unerreichbar machen. */
+let kv: Deno.Kv | null = null;
+let kvFehler = "";
+try {
+  kv = await Deno.openKv();
+} catch (e) {
+  kvFehler = e instanceof Error ? e.message : String(e);
+  console.error("Keine KV-Datenbank verbunden:", kvFehler);
+}
 
 /* ---------- Helfer ---------- */
 function clean(s: unknown, max: number): string {
@@ -62,7 +72,18 @@ function publicView(c: Kommentar, fragenderId: string) {
   };
 }
 
-async function alleKommentare(): Promise<Kommentar[]> {
+function kvFehltAntwort(): Response {
+  return json(
+    {
+      error:
+        "Die Kommentarspalte ist noch nicht eingerichtet – der App fehlt die Datenbank.",
+      detail: kvFehler,
+    },
+    503,
+  );
+}
+
+async function alleKommentare(kv: Deno.Kv): Promise<Kommentar[]> {
   const liste: Kommentar[] = [];
   for await (const e of kv.list<Kommentar>({ prefix: ["comments"] })) {
     if (e.value) liste.push(e.value);
@@ -112,8 +133,9 @@ Deno.serve({ port: PORT }, async (req: Request) => {
 
   /* Kommentare lesen */
   if (pfad === "/api/comments" && req.method === "GET") {
+    if (!kv) return kvFehltAntwort();
     const fragenderId = clean(url.searchParams.get("clientId"), 64);
-    const liste = await alleKommentare();
+    const liste = await alleKommentare(kv);
     return json({
       comments: liste.map((c) => publicView(c, fragenderId)),
       lehrer: istLehrer(url),
@@ -122,6 +144,7 @@ Deno.serve({ port: PORT }, async (req: Request) => {
 
   /* Kommentar schreiben */
   if (pfad === "/api/comments" && req.method === "POST") {
+    if (!kv) return kvFehltAntwort();
     let body: Record<string, unknown>;
     try {
       body = await req.json();
@@ -143,7 +166,7 @@ Deno.serve({ port: PORT }, async (req: Request) => {
       return json({ error: "Einen Moment noch." }, 429);
     }
 
-    const liste = await alleKommentare();
+    const liste = await alleKommentare(kv);
     if (liste.length >= MAX_TOTAL) {
       return json({ error: "Die Kommentarspalte ist voll." }, 429);
     }
@@ -172,6 +195,7 @@ Deno.serve({ port: PORT }, async (req: Request) => {
   /* Einzelnen Kommentar löschen */
   const treffer = pfad.match(/^\/api\/comments\/([\w.-]+)$/);
   if (treffer && req.method === "DELETE") {
+    if (!kv) return kvFehltAntwort();
     const id = treffer[1];
     const eintrag = await kv.get<Kommentar>(["comments", id]);
     if (!eintrag.value) return json({ error: "Nicht gefunden." }, 404);
@@ -187,6 +211,7 @@ Deno.serve({ port: PORT }, async (req: Request) => {
 
   /* Alles zurücksetzen – nur mit Lehrer-Link */
   if (pfad === "/api/comments" && req.method === "DELETE") {
+    if (!kv) return kvFehltAntwort();
     if (!istLehrer(url)) return json({ error: "Nur mit Lehrer-Link." }, 403);
     for await (const e of kv.list({ prefix: ["comments"] })) {
       await kv.delete(e.key);
