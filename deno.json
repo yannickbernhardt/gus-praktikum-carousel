@@ -1,7 +1,4 @@
 {
-  "name": "gus-praktikum-carousel",
-  "version": "1.0.0",
-  "exports": "./main.ts",
   "unstable": ["kv"],
   "tasks": {
     "start": "deno run --allow-net --allow-read --allow-env --unstable-kv main.ts"
