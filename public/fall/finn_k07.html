@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ffffff">
+<title>finn_k07</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body { background: #fafafa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #262626; display: flex; justify-content: center; min-height: 100vh; min-height: 100dvh; }
+.app { width: 100%; max-width: 470px; background: #fff; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+button { font: inherit; color: inherit; }
+.ib { background: none; border: none; padding: 0; margin: 0; color: #262626; display: flex; cursor: pointer; }
+.ib:active { opacity: .5; }
+.spur { margin-top: auto; padding: 26px 16px 30px; text-align: center; font-size: 11.5px; line-height: 1.5; color: #a8a8a8; }
+.spur b { display: inline-block; color: #fff; background: #3d5a73; border-radius: 20px; padding: 3px 11px; margin-bottom: 7px;
+  font-size: 12px; letter-spacing: .02em; }
+
+.top { display: flex; align-items: center; gap: 14px; padding: 10px 14px; position: sticky; top: 0; background: #fff; z-index: 5;
+  border-bottom: 1px solid #efefef; font-weight: 700; font-size: 17px; min-height: 50px; }
+.top .t { flex: 1; } .top .t.mitte { text-align: center; margin-right: 40px; }
+.prof { display: flex; align-items: center; gap: 24px; padding: 16px 16px 10px; }
+.ring { flex: none; border-radius: 50%; padding: 2.5px; background: linear-gradient(45deg, #f9ce34, #ee2a7b 45%, #6228d7); display: flex; }
+.ring img { display: block; border-radius: 50%; border: 3px solid #fff; object-fit: cover; }
+.prof .ring img { width: 82px; height: 82px; }
+.zahlen { flex: 1; display: flex; justify-content: space-around; text-align: center; font-size: 13px; }
+.zahlen b { display: block; font-size: 17px; }
+.bio { padding: 2px 16px 12px; font-size: 14px; line-height: 1.42; } .bio b { font-weight: 600; }
+.knoepfe { display: flex; gap: 6px; padding: 0 16px 14px; }
+.knoepfe button { flex: 1; border: none; border-radius: 8px; padding: 7px 0; font-weight: 600; font-size: 14px; cursor: pointer; }
+.folgen { background: #0095f6; color: #fff !important; } .folgen.ja { background: #efefef; color: #262626 !important; }
+.nachricht { background: #efefef; }
+.tabs { display: flex; border-top: 1px solid #efefef; }
+.tabs span { flex: 1; display: flex; justify-content: center; padding: 10px 0; }
+.tabs span.an { border-top: 1px solid #262626; margin-top: -1px; }
+.raster { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.raster button { border: none; padding: 0; aspect-ratio: 1 / 1; cursor: pointer; background: #efefef; overflow: hidden; }
+.raster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Beitragsansicht */
+.ebene { position: fixed; inset: 0; z-index: 20; display: flex; justify-content: center; background: rgba(0,0,0,.0); }
+.ebene[hidden] { display: none; }
+.feed { width: 100%; max-width: 470px; background: #fff; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.post { scroll-margin-top: 50px; padding-bottom: 14px; }
+.pkopf { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px 9px 14px; }
+.wer { display: flex; align-items: center; gap: 10px; }
+.wer .ring { padding: 2px; } .wer .ring img { width: 32px; height: 32px; border-width: 2px; }
+.name { font-weight: 600; font-size: 14px; line-height: 1.2; } .ort { font-size: 12px; line-height: 1.25; }
+.foto { width: 100%; aspect-ratio: 1 / 1; display: block; object-fit: cover; background: #efefef; }
+.leiste { display: flex; align-items: center; padding: 10px 12px 2px; }
+.leiste .l { display: flex; gap: 15px; } .leiste .frei { flex: 1; }
+.herz.an svg { fill: #ed4956; stroke: #ed4956; } .herz.an { animation: hop .35s ease; }
+@keyframes hop { 40% { transform: scale(1.25); } }
+.likes { padding: 6px 14px 0; font-weight: 600; font-size: 14px; }
+.text { padding: 4px 14px 0; font-size: 14px; line-height: 1.42; overflow-wrap: anywhere; }
+.text b { font-weight: 600; margin-right: 4px; } .tags { color: #00376b; }
+.mehrlink { color: #737373; cursor: pointer; background: none; border: none; padding: 0; }
+.alle { display: block; padding: 6px 14px 0; font-size: 14px; color: #737373; background: none; border: none; cursor: pointer; text-align: left; }
+.zeit { padding: 5px 14px 0; font-size: 11px; color: #8e8e8e; letter-spacing: .02em; }
+
+/* Kommentare als Blatt von unten */
+.blatt-ebene { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.45); display: flex; justify-content: center; align-items: flex-end; }
+.blatt-ebene[hidden] { display: none; }
+.blatt { width: 100%; max-width: 470px; height: 78vh; height: 78dvh; background: #fff; border-radius: 14px 14px 0 0; display: flex; flex-direction: column;
+  animation: hoch .22s ease-out; }
+@keyframes hoch { from { transform: translateY(40px); opacity: .6; } to { transform: none; opacity: 1; } }
+.griff { width: 40px; height: 4px; border-radius: 2px; background: #dbdbdb; margin: 9px auto 0; }
+.bkopf { text-align: center; font-weight: 700; font-size: 15px; padding: 10px 0 11px; border-bottom: 1px solid #efefef; position: relative; }
+.bkopf button { position: absolute; right: 12px; top: 6px; background: none; border: none; font-size: 26px; line-height: 1; cursor: pointer; color: #262626; }
+.liste { flex: 1; overflow-y: auto; padding: 4px 14px 10px; -webkit-overflow-scrolling: touch; }
+.k { display: flex; gap: 11px; padding: 10px 0 4px; align-items: flex-start; }
+.kav { flex: none; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; background: #dbdbdb; }
+.antw .k { padding-top: 8px; } .antw .kav { width: 26px; height: 26px; }
+.kb { flex: 1; min-width: 0; font-size: 14px; line-height: 1.4; }
+.kn { font-weight: 600; font-size: 13px; } .kz { color: #8e8e8e; margin-left: 6px; font-size: 12.5px; }
+.kt { margin-top: 1px; overflow-wrap: anywhere; } .at { color: #00376b; }
+.km { margin-top: 5px; font-size: 12px; color: #8e8e8e; font-weight: 600; }
+.kh { flex: none; background: none; border: none; padding: 6px 0 0; color: #8e8e8e; cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; font-size: 11px; gap: 2px; min-width: 22px; }
+.kh.an { color: #ed4956; } .kh.an svg { fill: #ed4956; stroke: #ed4956; }
+.aufklapp { display: flex; align-items: center; gap: 12px; margin: 6px 0 2px 45px; background: none; border: none; padding: 2px 0;
+  font-size: 12.5px; font-weight: 600; color: #8e8e8e; cursor: pointer; }
+.aufklapp::before { content: ""; width: 24px; border-top: 1px solid #c7c7c7; }
+.antw { margin-left: 45px; }
+.antw[hidden] { display: none; }
+.feld { display: flex; align-items: center; gap: 10px; padding: 10px 14px 14px; border-top: 1px solid #efefef; }
+.feld .kav { width: 30px; height: 30px; }
+.feld input { flex: 1; min-width: 0; border: 1px solid #dbdbdb; border-radius: 20px; padding: 9px 14px; font-size: 14px; background: #fafafa; color: #8e8e8e; }
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><span class="ib"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="t">finn_k07</span><span class="ib"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span></div>
+<div class="prof"><div class="ring"><img src="/fall/img/t/avatar.jpg" alt="Profilbild"></div>
+  <div class="zahlen"><div><b>9</b>Beiträge</div><div><b>412</b>Follower</div><div><b>389</b>Gefolgt</div></div></div>
+<div class="bio"><b>Finn K.</b><br>17 | FOS 11 Gesundheit und Soziales<br>Praktikum bis November</div>
+<div class="knoepfe"><button class="folgen" id="folgen">Folgen</button><button class="nachricht">Nachricht</button></div>
+<div class="tabs"><span class="an"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></span><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a8a8a8" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 8.5h18M8 3l3 5.5M14 3l3 5.5M10 12v6l5-3z"/></svg></span><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a8a8a8" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M6.5 20c1-3 3-4.5 5.5-4.5s4.5 1.5 5.5 4.5"/></svg></span></div>
+<div class="raster" id="raster"></div>
+<div class="spur"><b>Spur A: Finns Profil</b><br>Öffnen Sie alles, was sich öffnen lässt. Notieren Sie im Protokoll, was Sie über das Kind erfahren.<br>Unterrichtsfall: Alle Personen, Konten, die Kita und der Ort Lindenfeld sind erfunden.</div>
+</div>
+<div class="ebene" id="feedEbene" hidden><div class="feed" id="feed">
+  <div class="top"><button class="ib" id="feedZurueck" aria-label="Zurück"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="t mitte">Beiträge</span></div>
+</div></div>
+<div class="blatt-ebene" id="blattEbene" hidden><div class="blatt">
+  <div class="griff"></div><div class="bkopf">Kommentare<button id="blattZu" aria-label="Schließen">&times;</button></div>
+  <div class="liste" id="liste"></div>
+  <div class="feld"><img class="kav" id="meinAva" alt=""><input type="text" disabled placeholder="Kommentieren ist eingeschränkt"></div>
+</div></div>
+<script>
+var POSTS = [{"img": "sandkasten", "ort": "", "likes": 23, "zeit": "Dienstag, 12:40", "cap": "Tag 2 im Praktikum und schon allein mit 15 Zwergen draußen 😅 Die Kleine mit der pinken Beinschiene hat mir den ganzen Morgen Sandkuchen gebacken. Ich glaub, ich hab meinen Beruf gefunden.", "tags": "#praktikum #kita #sandkuchenchef #erzieherwerden", "n": 7, "kom": [{"u": "lena.mrtns", "z": "2 Std.", "t": "Wie süß ist das denn 🥹", "l": 2, "a": []}, {"u": "jana.lndf", "z": "2 Std.", "t": "Moment, ist das der Zaun vom Schneckenhaus am Mühlenweg? Da war ich früher auch im Kindergarten!", "l": 3, "a": [{"u": "finn_k07", "z": "2 Std.", "t": "@jana.lndf jaa genau da 😄", "l": 1}]}, {"u": "sandra.hollmann", "z": "1 Std.", "t": "Das ist bestimmt unsere Mila! Sie erzählt seit Montag nur noch vom neuen Praktikanten 😊", "l": 12, "a": [{"u": "finn_k07", "z": "1 Std.", "t": "@sandra.hollmann haha ja, die Kleine ist echt süß", "l": 4}]}, {"u": "tobi.fos", "z": "40 Min.", "t": "Bro, das darfst du doch gar nicht posten", "l": 9, "a": [{"u": "finn_k07", "z": "35 Min.", "t": "@tobi.fos chill, ist mein privater Account", "l": 1}]}]}, {"img": "tuer", "ort": "Lindenfeld", "likes": 31, "zeit": "Montag, 07:52", "cap": "Erster Tag! Ab jetzt bin ich bei den Schnecken 🐌", "tags": "#praktikum #ersterTag", "n": 6, "kom": [{"u": "petra_k64", "z": "1 T.", "t": "Viel Erfolg, mein Großer! ❤️", "l": 1, "a": []}, {"u": "tobi.fos", "z": "1 T.", "t": "Erzieher Finn 😂😂", "l": 5, "a": [{"u": "finn_k07", "z": "1 T.", "t": "@tobi.fos warts ab", "l": 2}]}, {"u": "maxi.brkmp", "z": "1 T.", "t": "welche kita?", "l": 0, "a": [{"u": "finn_k07", "z": "1 T.", "t": "@maxi.brkmp die am Mühlenweg", "l": 0}]}, {"u": "lena.mrtns", "z": "1 T.", "t": "Die Schnecken an der Tür 😍", "l": 1, "a": []}]}, {"img": "pizza", "ort": "", "likes": 44, "zeit": "vor 3 Tagen", "cap": "Letztes Wochenende vor dem Praktikum. Muss gefeiert werden 🍕", "tags": "", "n": 3, "kom": [{"u": "lena.mrtns", "z": "3 T.", "t": "ohne mich?? 😤", "l": 2, "a": [{"u": "finn_k07", "z": "3 T.", "t": "@lena.mrtns nächstes mal, versprochen", "l": 1}]}, {"u": "tobi.fos", "z": "3 T.", "t": "Beste Pizza der Stadt, ich sags euch", "l": 3, "a": []}]}, {"img": "schule", "ort": "", "likes": 58, "zeit": "vor 3 Wochen", "cap": "Neues Schuljahr, neue Schule. FOS 11, let's go 📚", "tags": "#fos #gesundheitundsoziales", "n": 3, "kom": [{"u": "tobi.fos", "z": "3 W.", "t": "Endlich in einer Klasse 💪", "l": 4, "a": []}, {"u": "petra_k64", "z": "3 W.", "t": "Stolz auf dich ❤️", "l": 2, "a": []}, {"u": "lena.mrtns", "z": "3 W.", "t": "Viel Glück euch!", "l": 1, "a": []}]}, {"img": "see", "ort": "", "likes": 87, "zeit": "vor 7 Wochen", "cap": "Letzter Ferientag 🌅", "tags": "", "n": 3, "kom": [{"u": "jana.lndf", "z": "7 W.", "t": "Wunderschön 😍", "l": 2, "a": []}, {"u": "maxi.brkmp", "z": "7 W.", "t": "wo ist das?", "l": 0, "a": [{"u": "finn_k07", "z": "7 W.", "t": "@maxi.brkmp verrat ich nicht 😄", "l": 1}]}]}, {"img": "fussball", "ort": "Sportplatz Lindenfeld", "likes": 52, "zeit": "vor 9 Wochen", "cap": "3:1. Was ein Spiel ⚽", "tags": "#kreisliga", "n": 3, "kom": [{"u": "coach.dirk", "z": "9 W.", "t": "Starke Leistung, Jungs! 👏", "l": 6, "a": []}, {"u": "maxi.brkmp", "z": "9 W.", "t": "Dein Tor war sauber 🔥", "l": 3, "a": [{"u": "finn_k07", "z": "9 W.", "t": "@maxi.brkmp danke bro", "l": 1}]}]}, {"img": "konzert", "ort": "", "likes": 103, "zeit": "vor 12 Wochen", "cap": "Bestes Konzert des Jahres 🎶", "tags": "", "n": 2, "kom": [{"u": "lena.mrtns", "z": "12 W.", "t": "Ich will zurück 😭", "l": 3, "a": []}, {"u": "tobi.fos", "z": "12 W.", "t": "Wann wieder?", "l": 1, "a": []}]}, {"img": "fahrstunde", "ort": "", "likes": 76, "zeit": "vor 4 Monaten", "cap": "Erste Fahrstunde überlebt 🚗", "tags": "", "n": 3, "kom": [{"u": "petra_k64", "z": "17 W.", "t": "Ich bete für alle Verkehrsteilnehmer 😅", "l": 9, "a": [{"u": "finn_k07", "z": "17 W.", "t": "@petra_k64 danke Mama 🙄", "l": 4}]}, {"u": "tobi.fos", "z": "17 W.", "t": "Taxi Finn wann?", "l": 2, "a": []}]}, {"img": "hund", "ort": "", "likes": 121, "zeit": "vor 5 Monaten", "cap": "Bester Hund der Welt, keine Diskussion 🐶", "tags": "", "n": 3, "kom": [{"u": "jana.lndf", "z": "21 W.", "t": "Ist das Bruno? 😍", "l": 2, "a": [{"u": "finn_k07", "z": "21 W.", "t": "@jana.lndf jaa 😄", "l": 1}]}, {"u": "lena.mrtns", "z": "21 W.", "t": "So süß", "l": 1, "a": []}]}];
+var AVA = '/fall/img/t/avatar.jpg';
+var LEER = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="#dbdbdb"/><circle cx="20" cy="16" r="7.5" fill="#fff"/><path d="M5 40c2-9 8.5-13 15-13s13 4 15 13z" fill="#fff"/></svg>');
+var HERZ = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+var KHERZ = HERZ.replace('width="26" height="26"', 'width="14" height="14"').replace('stroke-width="1.8"', 'stroke-width="2"');
+var BLASE = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.5-.7L3 21l1.4-4.5A8.4 8.4 0 0 1 3.6 11.5 8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>';
+var TEILEN = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+var MERKEN = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+var MEHR = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>';
+
+function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+function mark(s) { return esc(s).replace(/(@[\w.]+)/g, '<span class="at">$1</span>'); }
+function avatarFuer(u) { return u === 'finn_k07' ? AVA : LEER; }
+
+/* ---------- Raster ---------- */
+var raster = document.getElementById('raster');
+POSTS.forEach(function (p, i) {
+  var b = el('button'); b.setAttribute('aria-label', 'Beitrag öffnen');
+  b.innerHTML = '<img src="/fall/img/t/' + p.img + '.jpg" alt="" loading="lazy">';
+  b.addEventListener('click', function () { geheZu('#p' + (i + 1)); });
+  raster.appendChild(b);
+});
+
+/* ---------- Beitragsansicht ---------- */
+var feed = document.getElementById('feed'), feedEbene = document.getElementById('feedEbene');
+POSTS.forEach(function (p, i) {
+  var post = el('article', 'post'); post.id = 'p' + (i + 1);
+  var kurz = p.cap.length > 70;
+  var capKurz = kurz ? esc(p.cap.slice(0, p.cap.lastIndexOf(' ', 66))) + '… <button class="mehrlink">mehr</button>' : esc(p.cap) + (p.tags ? ' <span class="tags">' + p.tags + '</span>' : '');
+  post.innerHTML =
+    '<div class="pkopf"><div class="wer"><div class="ring"><img src="' + AVA + '" alt=""></div><div><div class="name">finn_k07</div>' +
+    (p.ort ? '<div class="ort">' + p.ort + '</div>' : '') + '</div></div><span class="ib">' + MEHR + '</span></div>' +
+    '<img class="foto" src="/fall/img/' + p.img + '.jpg" alt="" loading="lazy">' +
+    '<div class="leiste"><div class="l"><button class="ib herz" aria-label="Gefällt mir">' + HERZ + '</button><button class="ib kbtn" aria-label="Kommentare">' + BLASE + '</button><span class="ib">' + TEILEN + '</span></div><div class="frei"></div><span class="ib">' + MERKEN + '</span></div>' +
+    '<div class="likes">Gefällt ' + p.likes + ' Mal</div>' +
+    '<div class="text"><b>finn_k07</b><span class="cap">' + capKurz + '</span></div>' +
+    '<button class="alle">Alle ' + p.n + ' Kommentare ansehen</button>' +
+    '<div class="zeit">' + p.zeit + '</div>';
+  var m = post.querySelector('.mehrlink');
+  if (m) m.addEventListener('click', function () {
+    post.querySelector('.cap').innerHTML = esc(p.cap) + (p.tags ? ' <span class="tags">' + p.tags + '</span>' : '');
+  });
+  var h = post.querySelector('.herz'), an = false;
+  h.addEventListener('click', function () { an = !an; h.classList.toggle('an', an); post.querySelector('.likes').textContent = 'Gefällt ' + (p.likes + (an ? 1 : 0)) + ' Mal'; });
+  post.querySelector('.foto').addEventListener('dblclick', function () { if (!an) h.click(); });
+  function oeffne() { geheZu('#p' + (i + 1) + 'k'); }
+  post.querySelector('.alle').addEventListener('click', oeffne);
+  post.querySelector('.kbtn').addEventListener('click', oeffne);
+  feed.appendChild(post);
+});
+
+/* ---------- Kommentare ---------- */
+var blattEbene = document.getElementById('blattEbene'), liste = document.getElementById('liste');
+function kommentar(c, klein) {
+  var w = el('div', 'k');
+  w.innerHTML = '<img class="kav" src="' + avatarFuer(c.u) + '" alt=""><div class="kb"><span class="kn">' + c.u + '</span><span class="kz">' + c.z + '</span>' +
+    '<div class="kt">' + mark(c.t) + '</div><div class="km">Antworten</div></div>' +
+    '<button class="kh" aria-label="Gefällt mir">' + KHERZ + '<span>' + (c.l || '') + '</span></button>';
+  var b = w.querySelector('.kh'), an = false;
+  b.addEventListener('click', function () { an = !an; b.classList.toggle('an', an); b.querySelector('span').textContent = (c.l + (an ? 1 : 0)) || ''; });
+  return w;
+}
+function zeigeKommentare(i) {
+  liste.innerHTML = '';
+  POSTS[i].kom.forEach(function (c) {
+    liste.appendChild(kommentar(c));
+    if (c.a.length) {
+      var box = el('div', 'antw'); box.hidden = true;
+      c.a.forEach(function (a) { box.appendChild(kommentar(a, true)); });
+      var n = c.a.length;
+      var auf = el('button', 'aufklapp', n === 1 ? '1 weitere Antwort ansehen' : n + ' weitere Antworten ansehen');
+      auf.addEventListener('click', function () {
+        box.hidden = !box.hidden;
+        auf.textContent = box.hidden ? (n === 1 ? '1 weitere Antwort ansehen' : n + ' weitere Antworten ansehen') : 'Antworten ausblenden';
+      });
+      liste.appendChild(auf); liste.appendChild(box);
+    }
+  });
+  liste.scrollTop = 0;
+}
+
+/* ---------- Navigation über die Adresse (#p1, #p1k), damit „Zurück“ am Handy funktioniert ---------- */
+var imApp = false;
+function geheZu(h) { imApp = true; location.hash = h; }
+function zurueck() { if (imApp && history.length > 1) history.back(); else location.hash = ''; }
+var letzterPost = -1;
+function route() {
+  var m = location.hash.match(/^#p(\d+)(k?)$/);
+  if (!m) { feedEbene.hidden = true; blattEbene.hidden = true; document.body.style.overflow = ''; letzterPost = -1; return; }
+  var i = Math.min(POSTS.length, Math.max(1, +m[1])) - 1;
+  document.body.style.overflow = 'hidden';
+  if (feedEbene.hidden || letzterPost !== i) {
+    feedEbene.hidden = false;
+    var ziel = document.getElementById('p' + (i + 1));
+    if (letzterPost !== i) feed.scrollTop = ziel.offsetTop - 50;
+  }
+  letzterPost = i;
+  if (m[2]) { zeigeKommentare(i); blattEbene.hidden = false; } else { blattEbene.hidden = true; }
+}
+window.addEventListener('hashchange', route);
+document.getElementById('feedZurueck').addEventListener('click', zurueck);
+document.getElementById('blattZu').addEventListener('click', zurueck);
+blattEbene.addEventListener('click', function (e) { if (e.target === blattEbene) zurueck(); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && location.hash) zurueck(); });
+var f = document.getElementById('folgen');
+f.addEventListener('click', function () { var ja = f.classList.toggle('ja'); f.textContent = ja ? 'Gefolgt' : 'Folgen'; });
+document.getElementById('meinAva').src = LEER;
+route();
+</script>
+</body>
+</html>

@@ -74,16 +74,17 @@ jede\*n erreichbar, der ihn kennt. Deshalb:
 
 ## Datenschutz-Fall „Finns Post“ (Sozi 1.1.2)
 
-Vier statische Seiten für die Doppelstunde zum Datenschutz. Jede Seite ist eine Spur,
-die Klasse kommt per QR-Code an der Wand dorthin:
+Zwei Spuren für die Doppelstunde zum Datenschutz, die Klasse kommt per QR-Code an der Wand dorthin:
 
 | Spur | Pfad | Inhalt |
 |------|------|--------|
-| A | `/fall/a` | Finns Post mit Foto aus dem Kita-Garten |
-| B | `/fall/b` | Finns Profil, Beiträge per Tippen aufrufbar |
-| C | `/fall/c` | Die Kommentare unter dem Post |
-| D | `/fall/d` | Internetseite der Kita |
+| A | `/fall/finn_k07` | Finns Profil: neun Beiträge, jede Kommentarspalte und jede Antwort lässt sich öffnen |
+| B | `/fall/kita-schneckenhaus` | Internetseite der Kita |
 
-Alle Personen, Konten, die Kita und der Ort Lindenfeld sind erfunden. Die Seiten
-speichern nichts und senden nichts; Herzen und „Folgen“ wirken nur auf dem eigenen Gerät.
-Suchmaschinen werden per `noindex` ausgeschlossen.
+Direkt zu einem Beitrag: `/fall/finn_k07#p1` (Beitrag 1), mit offener Kommentarspalte `/fall/finn_k07#p1k`.
+Die alten Adressen `/fall/a` bis `/fall/d` leiten dorthin weiter.
+
+Die Fotos in `public/fall/img` sind KI-generiert (Canva) und zeigen keine Kinder. Alle Personen, Konten,
+die Kita und der Ort Lindenfeld sind erfunden. Die Seiten speichern nichts und senden nichts; Herzen,
+„Folgen“ und aufgeklappte Antworten wirken nur auf dem eigenen Gerät. Suchmaschinen werden per `noindex`
+ausgeschlossen.
