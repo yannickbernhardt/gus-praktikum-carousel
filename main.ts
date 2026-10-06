@@ -103,18 +103,22 @@ const TYPES: Record<string, string> = {
 };
 
 async function statisch(pathname: string): Promise<Response> {
-  const rel = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+  let rel = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "").replace(/\/+$/, "");
   if (rel.includes("..")) return new Response("Verboten", { status: 403 });
 
+  /* Seiten ohne Endung, z. B. /fall/a für die Spuren des Datenschutz-Falls */
+  if (!rel.slice(rel.lastIndexOf("/") + 1).includes(".")) rel += ".html";
+
   const endung = rel.slice(rel.lastIndexOf("."));
+  const headers: Record<string, string> = {
+    "content-type": TYPES[endung] ?? "application/octet-stream",
+    "cache-control": "no-cache",
+  };
+  /* Der Unterrichtsfall soll in keiner Suchmaschine auftauchen */
+  if (rel.startsWith("fall/")) headers["x-robots-tag"] = "noindex, nofollow";
   try {
     const datei = await Deno.readFile(new URL(`./public/${rel}`, import.meta.url));
-    return new Response(datei, {
-      headers: {
-        "content-type": TYPES[endung] ?? "application/octet-stream",
-        "cache-control": "no-cache",
-      },
-    });
+    return new Response(datei, { headers });
   } catch {
     return new Response("Nicht gefunden", {
       status: 404,

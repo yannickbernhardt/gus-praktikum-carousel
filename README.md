@@ -71,3 +71,19 @@ jede\*n erreichbar, der ihn kennt. Deshalb:
 - Der Hinweis unter dem Eingabefeld erinnert an die Schweigepflicht:
   keine echten Namen von Bewohner\*innen, Klient\*innen oder Kindern.
 - Nach der Stunde die Spalte über den Lehrer-Link leeren.
+
+## Datenschutz-Fall „Finns Post“ (Sozi 1.1.2)
+
+Vier statische Seiten für die Doppelstunde zum Datenschutz. Jede Seite ist eine Spur,
+die Klasse kommt per QR-Code an der Wand dorthin:
+
+| Spur | Pfad | Inhalt |
+|------|------|--------|
+| A | `/fall/a` | Finns Post mit Foto aus dem Kita-Garten |
+| B | `/fall/b` | Finns Profil, Beiträge per Tippen aufrufbar |
+| C | `/fall/c` | Die Kommentare unter dem Post |
+| D | `/fall/d` | Internetseite der Kita |
+
+Alle Personen, Konten, die Kita und der Ort Lindenfeld sind erfunden. Die Seiten
+speichern nichts und senden nichts; Herzen und „Folgen“ wirken nur auf dem eigenen Gerät.
+Suchmaschinen werden per `noindex` ausgeschlossen.

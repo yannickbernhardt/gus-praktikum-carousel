@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ffffff">
+<title>Spur C</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body { background: #fafafa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #262626; display: flex; justify-content: center; min-height: 100vh; min-height: 100dvh; }
+.app { width: 100%; max-width: 470px; background: #fff; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+button { font: inherit; }
+.icon-btn { background: none; border: none; padding: 0; margin: 0; color: #262626; display: flex; cursor: pointer; }
+.icon-btn:active { opacity: .5; }
+.ring { width: 40px; height: 40px; border-radius: 50%; padding: 2px; flex: none;
+  background: linear-gradient(45deg, #f9ce34, #ee2a7b 45%, #6228d7); display: flex; }
+.ava { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center;
+  justify-content: center; color: #fff; font-weight: 600; font-size: 15px; background: #3d5a73; }
+.foto { width: 100%; aspect-ratio: 1 / 1; display: block; background: #eee; }
+.foto svg { width: 100%; height: 100%; display: block; }
+.spur { margin-top: auto; padding: 22px 16px 26px; text-align: center; font-size: 11.5px; line-height: 1.5; color: #a8a8a8; }
+.spur b { display: inline-block; color: #fff; background: #3d5a73; border-radius: 20px; padding: 3px 11px; margin-bottom: 7px;
+  font-size: 12px; letter-spacing: .02em; }
+
+.top { display: flex; align-items: center; gap: 12px; padding: 11px 14px; position: sticky; top: 0; background: #fff; z-index: 5;
+  border-bottom: 1px solid #efefef; font-weight: 700; font-size: 16px; }
+.top span.t { flex: 1; text-align: center; margin-right: 36px; }
+.liste { padding: 6px 14px; }
+.k { display: flex; gap: 11px; padding: 10px 0; align-items: flex-start; }
+.k.antw { margin-left: 44px; padding-top: 4px; }
+.kav { flex: none; width: 34px; height: 34px; border-radius: 50%; color: #fff; font-weight: 600; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; }
+.k.antw .kav { width: 26px; height: 26px; font-size: 11px; }
+.kb { flex: 1; min-width: 0; font-size: 14px; line-height: 1.4; }
+.kn { font-weight: 600; font-size: 13px; } .kz { color: #8e8e8e; font-weight: 400; margin-left: 6px; font-size: 12.5px; }
+.kt { margin-top: 1px; overflow-wrap: anywhere; } .at { color: #00376b; }
+.km { margin-top: 5px; font-size: 12px; color: #8e8e8e; font-weight: 600; }
+.kh { flex: none; background: none; border: none; padding: 6px 0 0; color: #8e8e8e; cursor: pointer; display: flex;
+  flex-direction: column; align-items: center; font-size: 11px; gap: 2px; }
+.kh.an { color: #ed4956; } .kh.an svg { fill: #ed4956; stroke: #ed4956; }
+.feld { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-top: 1px solid #efefef; }
+.feld .kav { width: 30px; height: 30px; font-size: 12px; background: #c7c7c7; }
+.feld input { flex: 1; border: 1px solid #dbdbdb; border-radius: 20px; padding: 9px 14px; font-size: 14px; color: #8e8e8e;
+  background: #fafafa; }
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><span class="icon-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="t">Kommentare</span></div><div class="liste"><div class="k"><div class="kav" style="background:#7b8f9c">j</div><div class="kb"><span class="kn">jana.lndf</span><span class="kz">2 Std.</span><div class="kt">Moment, ist das der Zaun vom Schneckenhaus am Mühlenweg? Da war ich früher auch im Kindergarten!</div><div class="km">Antworten</div></div><button class="kh" data-n="3" aria-label="Gefällt mir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span>3</span></button></div><div class="k"><div class="kav" style="background:#9a6b8c">s</div><div class="kb"><span class="kn">sandra.hollmann</span><span class="kz">1 Std.</span><div class="kt">Das ist bestimmt unsere Mila! Sie erzählt seit Montag nur noch vom neuen Praktikanten.</div><div class="km">Antworten</div></div><button class="kh" data-n="12" aria-label="Gefällt mir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span>12</span></button></div><div class="k antw"><div class="kav" style="background:#3d5a73">f</div><div class="kb"><span class="kn">finn_k07</span><span class="kz">1 Std.</span><div class="kt"><span class="at">@sandra.hollmann</span> haha ja, die Kleine ist echt süß</div><div class="km">Antworten</div></div><button class="kh" data-n="4" aria-label="Gefällt mir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span>4</span></button></div><div class="k"><div class="kav" style="background:#5f8a6e">t</div><div class="kb"><span class="kn">tobi.fos</span><span class="kz">40 Min.</span><div class="kt">Bro, das darfst du doch gar nicht posten</div><div class="km">Antworten</div></div><button class="kh" data-n="9" aria-label="Gefällt mir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span>9</span></button></div><div class="k antw"><div class="kav" style="background:#3d5a73">f</div><div class="kb"><span class="kn">finn_k07</span><span class="kz">35 Min.</span><div class="kt"><span class="at">@tobi.fos</span> chill, ist mein privater Account</div><div class="km">Antworten</div></div><button class="kh" data-n="1" aria-label="Gefällt mir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span>1</span></button></div></div><div class="feld"><div class="kav">du</div><input type="text" disabled placeholder="Kommentieren ist eingeschränkt"></div><div class="spur"><b>Spur C: Die Kommentare</b><br>Notieren Sie im Protokoll, was Sie über das Kind erfahren.<br>Unterrichtsfall: Alle Personen, Konten, die Kita und der Ort Lindenfeld sind erfunden.</div>
+</div>
+<script>
+document.querySelectorAll('.kh').forEach(function (b) {
+  var n = parseInt(b.dataset.n, 10), an = false;
+  b.addEventListener('click', function () { an = !an; b.classList.toggle('an', an); b.querySelector('span').textContent = n + (an ? 1 : 0); });
+});
+</script>
+</body>
+</html>
