@@ -17,7 +17,7 @@ jobs:
             [ -z "$name" ] && continue
             curl -sSfL "$url" -o "/tmp/$name.raw"
             file "/tmp/$name.raw"
-            convert "/tmp/$name.raw" -resize '1080x1080>' -strip -quality 82 "public/fall/img/$name.jpg" || cp "/tmp/$name.raw" "public/fall/img/$name.jpg"
+            identify "/tmp/$name.raw" || true; convert "/tmp/$name.raw" -strip -quality 84 "public/fall/img/$name.jpg" || cp "/tmp/$name.raw" "public/fall/img/$name.png"
           done < bilder.txt
           ls -la public/fall/img
       - name: Einchecken
