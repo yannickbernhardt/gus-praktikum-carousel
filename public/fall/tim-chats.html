@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ffffff">
+<title>Chats</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body { background: #f2f3f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1c2833; display: flex; justify-content: center; min-height: 100vh; min-height: 100dvh; }
+.app { width: 100%; max-width: 470px; background: #fff; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+button { font: inherit; color: inherit; }
+.ib { background: none; border: none; padding: 0; margin: 0; color: inherit; display: flex; cursor: pointer; }
+.ib:active { opacity: .5; }
+.spur { margin-top: auto; padding: 26px 16px 30px; text-align: center; font-size: 11.5px; line-height: 1.5; color: #a8a8a8; }
+.spur b { display: inline-block; color: #fff; background: #3d5a73; border-radius: 20px; padding: 3px 11px; margin-bottom: 7px;
+  font-size: 12px; letter-spacing: .02em; }
+
+body { background: #e7ebef; }
+.liste { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.lkopf { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; }
+.lkopf h1 { margin: 0; font-size: 28px; letter-spacing: -.01em; }
+.lkopf .ib { color: #2a6fd6; }
+.suche { margin: 6px 16px 10px; background: #eef0f3; border-radius: 10px; padding: 8px 12px; color: #8a96a3; font-size: 15px;
+  display: flex; gap: 8px; align-items: center; }
+.filter { display: flex; gap: 8px; padding: 0 16px 8px; }
+.filter span { font-size: 13px; padding: 5px 12px; border-radius: 16px; background: #eef0f3; color: #4c5a67; }
+.filter span.an { background: #dbe8fb; color: #1d5bb8; font-weight: 600; }
+.zeile { display: flex; gap: 12px; align-items: center; width: 100%; background: none; border: none; padding: 10px 16px;
+  cursor: pointer; text-align: left; }
+.zeile:active { background: #f2f4f7; }
+.av { flex: none; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; color: #fff;
+  font-weight: 700; font-size: 17px; letter-spacing: .02em; }
+.zm { flex: 1; min-width: 0; border-bottom: 1px solid #eef0f3; padding-bottom: 10px; }
+.zo { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.zn { font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.zd { flex: none; font-size: 12.5px; color: #8a96a3; }
+.zt { font-size: 14.5px; color: #66727e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.ansicht { position: fixed; inset: 0; z-index: 20; display: flex; justify-content: center; background: #e7ebef; }
+.ansicht[hidden] { display: none; }
+.chat { width: 100%; max-width: 470px; display: flex; flex-direction: column; height: 100vh; height: 100dvh; background: #e9eef3; }
+.ckopf { display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 6px; background: #fff; border-bottom: 1px solid #e3e7eb; }
+.ckopf .ib { color: #2a6fd6; padding: 4px; }
+.ckopf .av { width: 38px; height: 38px; font-size: 14px; }
+.cn { font-weight: 600; font-size: 16px; line-height: 1.2; }
+.cs { font-size: 12.5px; color: #7b8794; line-height: 1.25; }
+.verlauf { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 8px 10px 14px; }
+.tag { text-align: center; margin: 14px 0 8px; }
+.tag span { display: inline-block; background: #fff; color: #56636f; font-size: 12.5px; padding: 4px 11px; border-radius: 8px;
+  box-shadow: 0 1px 1px rgba(0,0,0,.06); }
+.msg { display: flex; margin: 3px 0; }
+.msg.ich { justify-content: flex-end; }
+.blase { max-width: 82%; padding: 6px 9px 5px; border-radius: 12px; background: #fff; font-size: 15px; line-height: 1.38;
+  box-shadow: 0 1px 1px rgba(0,0,0,.07); overflow-wrap: anywhere; }
+.ich .blase { background: #d4e6ff; }
+.von { font-size: 12.5px; font-weight: 700; margin-bottom: 1px; }
+.z { float: right; margin: 7px 0 -3px 12px; font-size: 11px; color: #6f7c88; }
+.ich .z::after { content: " \2713\2713"; color: #2a6fd6; letter-spacing: -2px; }
+.eingabe { display: flex; gap: 8px; align-items: center; padding: 8px 10px calc(10px + env(safe-area-inset-bottom)); background: #fff;
+  border-top: 1px solid #e3e7eb; }
+.eingabe input { flex: 1; min-width: 0; border: 1px solid #dfe3e8; border-radius: 20px; padding: 9px 14px; font-size: 15px;
+  background: #f6f7f9; color: #8a96a3; }
+
+</style>
+</head>
+<body>
+<div class="app liste">
+  <div class="lkopf"><h1>Chats</h1><span class="ib" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span></div>
+  <div class="suche"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span>Suchen</span></div>
+  <div class="filter"><span class="an">Alle</span><span>Ungelesen</span><span>Gruppen</span></div>
+  <div id="zeilen"></div>
+  <div class="spur"><b>Spur A: Tims Chats</b><br>Öffnen Sie alle drei Chats. Achten Sie darauf, was der Chef verlangt und was Tim schreibt.<br>Unterrichtsfall: Personen, Betrieb und Ort Lindenfeld sind erfunden.</div>
+</div>
+<div class="ansicht" id="ansicht" hidden><div class="chat">
+  <div class="ckopf"><button class="ib" id="zu" aria-label="Zurück"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="av" id="cav"></div>
+    <div><div class="cn" id="cname"></div><div class="cs" id="csub"></div></div></div>
+  <div class="verlauf" id="verlauf"></div>
+  <div class="eingabe"><input type="text" disabled placeholder="Nachricht"><span aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a6fd6" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></div>
+</div></div>
+<script>
+var CHATS = [{"id": "chef", "name": "Chef Terhorst", "sub": "Frank Terhorst", "farbe": "#5b6b7a", "kuerzel": "FT", "gruppe": false, "msgs": [{"tag": "Samstag, 5. September"}, {"von": "Frank Terhorst", "z": "08:12", "t": "Moin Tim, kommst du heute um 10 zu mir nach Hause? Mein Wagen muss mal wieder gewaschen werden. Innen saugen nicht vergessen 👍", "f": "#b5532a"}, {"von": "ich", "z": "08:15", "t": "Ok 👍", "f": "#335"}, {"tag": "Samstag, 12. September"}, {"von": "Frank Terhorst", "z": "08:05", "t": "Gleiche Zeit wie letzte Woche 🚗🧽", "f": "#b5532a"}, {"von": "ich", "z": "08:31", "t": "Muss das jeden Samstag sein? Ich wollte eigentlich zu meiner Oma", "f": "#335"}, {"von": "Frank Terhorst", "z": "08:33", "t": "Gehört dazu. Lehrjahre sind keine Herrenjahre 😉", "f": "#b5532a"}, {"tag": "Mittwoch, 16. September"}, {"von": "Frank Terhorst", "z": "06:41", "t": "Ab Montag bringst du einen eigenen Bohrhammer mit. Werkzeug kaufen sich bei uns alle Azubis selbst. Den Werkzeugkoffer aus dem Lager ziehe ich dir von der Vergütung ab.", "f": "#b5532a"}, {"von": "ich", "z": "06:52", "t": "Was kostet der Koffer?", "f": "#335"}, {"von": "Frank Terhorst", "z": "06:53", "t": "89 €. Steht dann auf der Abrechnung.", "f": "#b5532a"}, {"tag": "Dienstag, 22. September"}, {"von": "Frank Terhorst", "z": "11:20", "t": "Die Berufsschule hat angerufen. Du warst heute nicht da. Was ist los?", "f": "#b5532a"}, {"von": "ich", "z": "11:46", "t": "Sorry, hab verschlafen 🙈", "f": "#335"}, {"tag": "Donnerstag, 24. September"}, {"von": "Frank Terhorst", "z": "15:58", "t": "Wird heute länger, bis halb sechs. Baustelle Kaiser muss Freitag fertig sein.", "f": "#b5532a"}, {"von": "ich", "z": "16:02", "t": "Krieg ich die Stunden bezahlt?", "f": "#335"}, {"von": "Frank Terhorst", "z": "16:03", "t": "Azubis kriegen keine Überstunden. Das ist Lehrgeld 😄", "f": "#b5532a"}, {"tag": "Montag, 5. Oktober"}, {"von": "ich", "z": "17:12", "t": "Können Sie mein Berichtsheft mal durchsehen? Ist noch alles offen.", "f": "#335"}, {"von": "Frank Terhorst", "z": "17:40", "t": "Keine Zeit. Mach das abends zu Hause, ich guck irgendwann drüber.", "f": "#b5532a"}], "vorschau": "Keine Zeit. Mach das abends zu Hause, ich guck irgendwann drüber.", "datum": "05.10."}, {"id": "team", "name": "Team Terhorst ⚡", "sub": "Frank, Marco, Jan, Svenja, Du", "farbe": "#d08a2c", "kuerzel": "TT", "gruppe": true, "msgs": [{"tag": "Freitag, 25. September"}, {"von": "Frank Terhorst", "z": "13:02", "t": "Heute ab 14:30 wie immer Werkstatt klar machen. Jeder seine Ecke, Gesellen auch. Danach gibt's Pizza 🍕", "f": "#b5532a"}, {"von": "Marco Lüttmann", "z": "13:04", "t": "👍", "f": "#2e8a5e"}, {"von": "Jan Wiesmann", "z": "13:05", "t": "Tim, du hast die Ecke mit den Kabeltrommeln 😄", "f": "#7a4fb5"}, {"von": "ich", "z": "13:09", "t": "😒 ok", "f": "#335"}, {"von": "Svenja Brock", "z": "13:15", "t": "Und bitte den Müll im Hof nicht vergessen ♻️", "f": "#c2417a"}, {"tag": "Freitag, 2. Oktober"}, {"von": "Frank Terhorst", "z": "13:10", "t": "Gleiches Spiel wie letzte Woche. Diesmal fegt Marco den Hof 😉", "f": "#b5532a"}, {"von": "Marco Lüttmann", "z": "13:12", "t": "Jawoll Chef 🧹", "f": "#2e8a5e"}], "vorschau": "Marco: Jawoll Chef 🧹", "datum": "02.10."}, {"id": "marco", "name": "Marco", "sub": "Marco Lüttmann, Geselle", "farbe": "#3f8f6b", "kuerzel": "ML", "gruppe": false, "msgs": [{"tag": "Samstag, 12. September"}, {"von": "ich", "z": "13:40", "t": "Ist das normal, dass ich jeden Samstag das Auto vom Chef wasche?", "f": "#335"}, {"von": "Marco Lüttmann", "z": "13:52", "t": "Hab ich in meiner Lehre auch gemacht 😅", "f": "#2e8a5e"}, {"von": "Marco Lüttmann", "z": "13:53", "t": "Und ganz ehrlich: In der Probezeit können die dich jederzeit ohne Grund kündigen. Halt lieber die Füße still bis Dezember.", "f": "#2e8a5e"}, {"von": "ich", "z": "14:01", "t": "Hm ok 😕", "f": "#335"}], "vorschau": "Du: Hm ok 😕", "datum": "12.09."}];
+
+var imApp = false;
+function geheZu(h) { imApp = true; location.hash = h; }
+function zurueck() { if (imApp && history.length > 1) history.back(); else location.hash = ''; }
+
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+var zeilen = document.getElementById('zeilen');
+CHATS.forEach(function (c) {
+  var b = document.createElement('button'); b.className = 'zeile';
+  b.innerHTML = '<div class="av" style="background:' + c.farbe + '">' + c.kuerzel + '</div><div class="zm"><div class="zo"><span class="zn">' +
+    esc(c.name) + '</span><span class="zd">' + c.datum + '</span></div><div class="zt">' + esc(c.vorschau) + '</div></div>';
+  b.addEventListener('click', function () { geheZu('#' + c.id); });
+  zeilen.appendChild(b);
+});
+var ansicht = document.getElementById('ansicht'), verlauf = document.getElementById('verlauf');
+function zeige(c) {
+  document.getElementById('cname').textContent = c.name;
+  document.getElementById('csub').textContent = c.sub;
+  var av = document.getElementById('cav'); av.textContent = c.kuerzel; av.style.background = c.farbe;
+  verlauf.innerHTML = '';
+  c.msgs.forEach(function (m) {
+    var d = document.createElement('div');
+    if (m.tag) { d.className = 'tag'; d.innerHTML = '<span>' + esc(m.tag) + '</span>'; }
+    else {
+      var ich = m.von === 'ich';
+      d.className = 'msg' + (ich ? ' ich' : '');
+      d.innerHTML = '<div class="blase">' + (c.gruppe && !ich ? '<div class="von" style="color:' + m.f + '">' + esc(m.von) + '</div>' : '') +
+        esc(m.t) + '<span class="z">' + m.z + '</span></div>';
+    }
+    verlauf.appendChild(d);
+  });
+  verlauf.scrollTop = 0;
+}
+function route() {
+  var id = location.hash.slice(1), c = CHATS.filter(function (x) { return x.id === id; })[0];
+  if (!c) { ansicht.hidden = true; document.body.style.overflow = ''; return; }
+  zeige(c); ansicht.hidden = false; document.body.style.overflow = 'hidden';
+}
+window.addEventListener('hashchange', route);
+document.getElementById('zu').addEventListener('click', zurueck);
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && location.hash) zurueck(); });
+route();
+</script>
+</body>
+</html>

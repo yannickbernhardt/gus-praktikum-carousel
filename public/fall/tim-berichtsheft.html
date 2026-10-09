@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#24527a">
+<title>Digitales Berichtsheft</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body { background: #f2f3f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1c2833; display: flex; justify-content: center; min-height: 100vh; min-height: 100dvh; }
+.app { width: 100%; max-width: 470px; background: #fff; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+button { font: inherit; color: inherit; }
+.ib { background: none; border: none; padding: 0; margin: 0; color: inherit; display: flex; cursor: pointer; }
+.ib:active { opacity: .5; }
+.spur { margin-top: auto; padding: 26px 16px 30px; text-align: center; font-size: 11.5px; line-height: 1.5; color: #a8a8a8; }
+.spur b { display: inline-block; color: #fff; background: #3d5a73; border-radius: 20px; padding: 3px 11px; margin-bottom: 7px;
+  font-size: 12px; letter-spacing: .02em; }
+
+body { background: #eef2f6; }
+.app { background: #f6f8fb; }
+.bar { display: flex; align-items: center; gap: 11px; padding: 12px 16px; background: #24527a; color: #fff; position: sticky; top: 0; z-index: 5; }
+.bar b { display: block; font-size: 16.5px; line-height: 1.2; } .bar span { font-size: 12px; opacity: .8; }
+.bar .frei { flex: 1; }
+.konto { width: 32px; height: 32px; border-radius: 50%; background: #e6eef6; color: #24527a; display: grid; place-items: center;
+  font-weight: 700; font-size: 13px; }
+.karte { background: #fff; margin: 12px 12px 0; border-radius: 12px; padding: 14px 15px; box-shadow: 0 1px 2px rgba(20,40,60,.08); }
+.karte h2 { margin: 0 0 8px; font-size: 15px; color: #24527a; }
+.daten { display: grid; grid-template-columns: auto 1fr; gap: 5px 12px; font-size: 14px; line-height: 1.35; }
+.daten dt { color: #6b7a88; } .daten dd { margin: 0; }
+.zaehler { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 12px 0; }
+.zaehler div { background: #fff; border-radius: 12px; padding: 11px 8px; text-align: center; font-size: 12.5px; color: #56636f;
+  box-shadow: 0 1px 2px rgba(20,40,60,.08); line-height: 1.3; }
+.zaehler b { display: block; font-size: 22px; color: #1c2833; margin-bottom: 2px; }
+.ueber { margin: 18px 16px 8px; font-size: 13px; font-weight: 700; color: #56636f; letter-spacing: .03em; }
+.woche { display: flex; align-items: center; gap: 12px; width: calc(100% - 24px); margin: 0 12px 8px; background: #fff; border: none;
+  border-radius: 12px; padding: 12px 14px; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(20,40,60,.08); }
+.woche:active { background: #f0f4f8; }
+.kw { flex: none; width: 50px; height: 50px; border-radius: 10px; background: #e6eef6; color: #24527a; display: grid;
+  place-items: center; font-weight: 700; font-size: 13px; line-height: 1.05; text-align: center; }
+.kw small { display: block; font-size: 10px; font-weight: 600; opacity: .75; }
+.wm { flex: 1; min-width: 0; } .wz { font-size: 15px; font-weight: 600; }
+.chip { display: inline-block; margin-top: 5px; font-size: 12px; font-weight: 600; border-radius: 12px; padding: 3px 9px; }
+.chip.offen { background: #fff1d6; color: #8a5a00; }
+.chip.leer { background: #fde4e4; color: #a32121; }
+.chip.entwurf { background: #e9edf1; color: #4c5a67; }
+.pfeil { color: #a5b1bc; }
+.ebene { position: fixed; inset: 0; z-index: 20; display: flex; justify-content: center; background: #f6f8fb; }
+.ebene[hidden] { display: none; }
+.detail { width: 100%; max-width: 470px; overflow-y: auto; -webkit-overflow-scrolling: touch; background: #f6f8fb; }
+.dkopf { display: flex; align-items: center; gap: 8px; padding: 10px 12px 10px 6px; background: #24527a; color: #fff;
+  position: sticky; top: 0; z-index: 2; }
+.dkopf b { font-size: 16px; display: block; } .dkopf span { font-size: 12.5px; opacity: .85; }
+table.tage { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tage th { text-align: left; font-size: 12px; color: #6b7a88; font-weight: 600; padding: 0 6px 6px; border-bottom: 1px solid #e3e8ee; }
+.tage td { padding: 9px 6px; border-bottom: 1px solid #eef2f6; vertical-align: top; line-height: 1.35; }
+.tage td:first-child { font-weight: 700; color: #24527a; width: 34px; }
+.tage td:last-child { text-align: right; white-space: nowrap; width: 54px; font-variant-numeric: tabular-nums; }
+.tage tr.summe td { font-weight: 700; border-bottom: none; }
+.status { display: grid; gap: 8px; font-size: 14px; }
+.status div { display: flex; justify-content: space-between; gap: 10px; }
+.status span:first-child { color: #6b7a88; }
+.gruen { color: #1d7a45; font-weight: 600; } .orange { color: #a86800; font-weight: 600; } .rot { color: #b42323; font-weight: 600; }
+.knopf { display: block; width: 100%; margin-top: 12px; border: none; border-radius: 10px; padding: 11px; font-weight: 600;
+  background: #dfe5ec; color: #8090a0; }
+.leerhinweis { font-size: 14.5px; color: #56636f; line-height: 1.5; margin: 0; }
+
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="bar"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H19v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H19v-3"/><path d="M8 7.5h7M8 11h5"/></svg><div><b>Digitales Berichtsheft</b><span>Ausbildungsnachweis</span></div><span class="frei"></span>
+    <div class="konto">TH</div></div>
+  <div class="karte"><h2>Tim Hölscher</h2><dl class="daten">
+    <dt>Beruf</dt><dd>Elektroniker, Fachrichtung Energie- und Gebäudetechnik</dd>
+    <dt>Betrieb</dt><dd>Elektro Terhorst GmbH, Lindenfeld</dd>
+    <dt>Ausbilder</dt><dd>Frank Terhorst</dd>
+    <dt>Beginn</dt><dd>01.08.2026, 1. Ausbildungsjahr</dd>
+    <dt>Nachweis</dt><dd>wöchentlich</dd></dl></div>
+  <div class="zaehler"><div><b>6</b>eingereicht</div><div><b>0</b>vom Ausbilder abgezeichnet</div>
+    <div><b>3</b>ohne Eintrag</div></div>
+  <div class="ueber">MEINE WOCHEN</div>
+  <div id="wochen"></div>
+  <div class="spur"><b>Spur B: Tims Berichtsheft</b><br>Öffnen Sie jede Woche. Achten Sie auf die Einträge, die Lücken und den Status.<br>Unterrichtsfall: Personen, Betrieb und Ort Lindenfeld sind erfunden.</div>
+</div>
+<div class="ebene" id="ebene" hidden><div class="detail">
+  <div class="dkopf"><button class="ib" id="zu" aria-label="Zurück"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div><b id="dtitel"></b><span id="dzeit"></span></div></div>
+  <div id="dinhalt"></div>
+</div></div>
+<script>
+var WOCHEN = [{"kw": 41, "zeitraum": "5. bis 9. Oktober", "status": "entwurf", "eingereicht": "", "tage": [{"t": "Mo", "a": "Kundendienst Möller: Altbau, Zählerschrank aufgenommen", "h": 8.0}]}, {"kw": 40, "zeitraum": "28. September bis 2. Oktober", "status": "leer", "eingereicht": "", "tage": []}, {"kw": 39, "zeitraum": "21. bis 25. September", "status": "leer", "eingereicht": "", "tage": []}, {"kw": 38, "zeitraum": "14. bis 18. September", "status": "leer", "eingereicht": "", "tage": []}, {"kw": 37, "zeitraum": "7. bis 12. September", "status": "offen", "eingereicht": "13.09.2026", "tage": [{"t": "Mo", "a": "Baustelle Kaiser: Schalter und Steckdosen montiert", "h": 8.0}, {"t": "Di", "a": "Berufsschule", "h": 8.0}, {"t": "Mi", "a": "Baustelle Kaiser: Schalter und Steckdosen montiert", "h": 8.0}, {"t": "Do", "a": "Baustelle Kaiser: Leuchten angeschlossen", "h": 9.5}, {"t": "Fr", "a": "Werkstatt aufgeräumt", "h": 8.0}, {"t": "Sa", "a": "Privatwagen von Herrn Terhorst gewaschen und gesaugt, bei ihm zu Hause", "h": 2.0}]}, {"kw": 36, "zeitraum": "31. August bis 5. September", "status": "offen", "eingereicht": "06.09.2026", "tage": [{"t": "Mo", "a": "Baustelle Kaiser: Leitungen beschriftet", "h": 8.0}, {"t": "Di", "a": "Baustelle Kaiser: Leitungen beschriftet", "h": 8.0}, {"t": "Mi", "a": "Kundendienst: Leuchten montiert", "h": 8.0}, {"t": "Do", "a": "Baustelle Kaiser: Unterverteilung fertig verdrahtet", "h": 8.0}, {"t": "Fr", "a": "Werkstatt aufgeräumt", "h": 8.0}, {"t": "Sa", "a": "Privatwagen von Herrn Terhorst gewaschen und gesaugt, bei ihm zu Hause", "h": 2.0}]}, {"kw": 35, "zeitraum": "24. bis 28. August", "status": "offen", "eingereicht": "30.08.2026", "tage": [{"t": "Mo", "a": "Baustelle Kaiser: Unterverteilung vorbereitet", "h": 8.0}, {"t": "Di", "a": "Kundendienst mit Marco: Herd angeschlossen", "h": 8.0}, {"t": "Mi", "a": "Baustelle Kaiser: Leitungen angeschlossen (mit Marco)", "h": 8.0}, {"t": "Do", "a": "Baustelle Kaiser: Unterverteilung verdrahtet (unter Aufsicht)", "h": 8.0}, {"t": "Fr", "a": "Werkstatt aufgeräumt", "h": 8.0}]}, {"kw": 34, "zeitraum": "17. bis 21. August", "status": "offen", "eingereicht": "23.08.2026", "tage": [{"t": "Mo", "a": "Baustelle Kaiser: Dosen gesetzt", "h": 8.0}, {"t": "Di", "a": "Unterweisung Messgeräte mit Marco", "h": 8.0}, {"t": "Mi", "a": "Baustelle Kaiser: Leitungen eingezogen", "h": 8.0}, {"t": "Do", "a": "Baustelle Kaiser: Leitungen eingezogen", "h": 8.0}, {"t": "Fr", "a": "Lager aufgeräumt", "h": 8.0}]}, {"kw": 33, "zeitraum": "10. bis 14. August", "status": "offen", "eingereicht": "16.08.2026", "tage": [{"t": "Mo", "a": "Baustelle Kaiser: Leerrohre verlegt", "h": 8.0}, {"t": "Di", "a": "Baustelle Kaiser: Dosen gesetzt", "h": 8.0}, {"t": "Mi", "a": "Baustelle Kaiser: Leitungen eingezogen", "h": 8.0}, {"t": "Do", "a": "Kundendienst mit Marco: Steckdose getauscht", "h": 8.0}, {"t": "Fr", "a": "Werkstatt: Kabelreste sortiert", "h": 8.0}]}, {"kw": 32, "zeitraum": "3. bis 7. August", "status": "offen", "eingereicht": "09.08.2026", "tage": [{"t": "Mo", "a": "Begrüßung, Betrieb und Lager kennengelernt, Unterweisung Arbeitsschutz", "h": 8.0}, {"t": "Di", "a": "Kundendienst mit Marco: Leuchten getauscht", "h": 8.0}, {"t": "Mi", "a": "Material im Lager sortiert, Fahrzeug mit Marco beladen", "h": 8.0}, {"t": "Do", "a": "Baustelle Kaiser (Neubau): Schlitze gestemmt, Leerrohre verlegt", "h": 8.0}, {"t": "Fr", "a": "Baustelle Kaiser: Schalterdosen gesetzt", "h": 8.0}]}];
+
+var imApp = false;
+function geheZu(h) { imApp = true; location.hash = h; }
+function zurueck() { if (imApp && history.length > 1) history.back(); else location.hash = ''; }
+
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+function zahl(x) { return x.toFixed(1).replace('.', ','); }
+var CHIP = { offen: 'eingereicht, Durchsicht ausstehend', leer: 'kein Eintrag', entwurf: 'Entwurf, nicht eingereicht' };
+var liste = document.getElementById('wochen');
+WOCHEN.forEach(function (w) {
+  var b = document.createElement('button'); b.className = 'woche';
+  b.innerHTML = '<div class="kw"><span><small>KW</small>' + w.kw + '</span></div><div class="wm"><div class="wz">' + esc(w.zeitraum) +
+    '</div><span class="chip ' + w.status + '">' + CHIP[w.status] + '</span></div><span class="pfeil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>';
+  b.addEventListener('click', function () { geheZu('#kw' + w.kw); });
+  liste.appendChild(b);
+});
+var ebene = document.getElementById('ebene'), inhalt = document.getElementById('dinhalt');
+function zeige(w) {
+  document.getElementById('dtitel').textContent = 'Kalenderwoche ' + w.kw;
+  document.getElementById('dzeit').textContent = w.zeitraum + ' 2026';
+  var h = '';
+  if (w.status === 'leer') {
+    h += '<div class="karte"><p class="leerhinweis">Für diese Woche gibt es noch keinen Eintrag.</p></div>';
+  } else {
+    var summe = 0, zeilen = '';
+    w.tage.forEach(function (t) { summe += t.h; zeilen += '<tr><td>' + t.t + '</td><td>' + esc(t.a) + '</td><td>' + zahl(t.h) + ' Std.</td></tr>'; });
+    h += '<div class="karte"><h2>Tätigkeiten</h2><table class="tage"><tr><th>Tag</th><th>Tätigkeit</th><th>Zeit</th></tr>' + zeilen +
+      '<tr class="summe"><td></td><td>Summe</td><td>' + zahl(summe) + ' Std.</td></tr></table></div>';
+  }
+  h += '<div class="karte"><h2>Status</h2><div class="status">';
+  if (w.status === 'offen') {
+    h += '<div><span>Azubi</span><span class="gruen">eingereicht am ' + w.eingereicht + '</span></div>' +
+         '<div><span>Ausbilder</span><span class="orange">Durchsicht ausstehend</span></div>' +
+         '<div><span>Kommentar Ausbilder</span><span>keiner</span></div>';
+  } else if (w.status === 'entwurf') {
+    h += '<div><span>Azubi</span><span>Entwurf, nicht eingereicht</span></div><div><span>Ausbilder</span><span>noch nicht möglich</span></div>';
+  } else {
+    h += '<div><span>Azubi</span><span class="rot">nicht eingereicht</span></div><div><span>Ausbilder</span><span>noch nicht möglich</span></div>';
+  }
+  h += '</div><button class="knopf" disabled>Abzeichnen (nur für Ausbilder)</button></div><div style="height:30px"></div>';
+  inhalt.innerHTML = h;
+}
+function route() {
+  var m = location.hash.match(/^#kw(\d+)$/), w = m && WOCHEN.filter(function (x) { return x.kw === +m[1]; })[0];
+  if (!w) { ebene.hidden = true; document.body.style.overflow = ''; return; }
+  zeige(w); ebene.hidden = false; ebene.querySelector('.detail').scrollTop = 0; document.body.style.overflow = 'hidden';
+}
+window.addEventListener('hashchange', route);
+document.getElementById('zu').addEventListener('click', zurueck);
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && location.hash) zurueck(); });
+route();
+</script>
+</body>
+</html>
